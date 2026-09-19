@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ronawicara - Aspirasi Siswa MPK</title>
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Palette Pastel */
+            --sky-blue: #89CFF0;
+            --baby-blue: #D4F0F0;
+            --pastel-pink: #FFD1DC;
+            --butter-yellow: #FFF5BA;
+            --mint-green: #C1E1C1;
+            
+            /* UI Neutral Accent */
+            --text-dark: #2C3E50;
+            --text-muted: #6C7A89;
+            --bg-page: #EBF4F6; /* Soft dominant blue tint */
+            --card-white: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 15px;
+        }
+
+        .wrapper {
+            background: var(--card-white);
+            max-width: 580px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(137, 207, 240, 0.25);
+            overflow: hidden;
+            border: 1px solid rgba(137, 207, 240, 0.3);
+        }
+
+        /* Header Dominan Sky Blue */
+        .header {
+            background: linear-gradient(135deg, var(--sky-blue), var(--baby-blue));
+            padding: 35px 25px;
+            text-align: center;
+            color: #1A365D;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .header p.tagline {
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.85;
+        }
+
+        .content {
+            padding: 30px 25px;
+        }
+
+        /* Sekilas Penjelasan & Edukasi */
+        .intro-box {
+            background-color: #F8FAFC;
+            border-left: 4px solid var(--sky-blue);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .dictionary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .dict-card {
+            padding: 12px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        /* Kategori Warna Pastel */
+        .dict-card.aspirasi { background-color: var(--butter-yellow); color: #6A5D00; }
+        .dict-card.kritik { background-color: var(--pastel-pink); color: #8A2B3E; }
+        .dict-card.saran { background-color: var(--mint-green); color: #1E5128; }
+
+        .dict-card strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text-dark);
+            background-color: #FAFAFA;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            border-color: var(--sky-blue);
+            background-color: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(137, 207, 240, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--sky-blue);
+            color: #1A365D;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(137, 207, 240, 0.4);
+        }
+
+        .btn-submit:hover {
+            background-color: #72C4EC;
+            transform: translateY(-1px);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid #F1F5F9;
+        }
+
+        @media (max-width: 480px) {
+            .dictionary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <!-- Header Utama -->
+    <div class="header">
+        <h1>RONAWICARA</h1>
+        <p class="tagline">Suara Kamu, Warna Bagi Sekolah Kita</p>
+    </div>
+
+    <div class="content">
+        <!-- Penjelasan Singkat & Edukasi -->
+        <div class="intro-box">
+            <p>Ruang bebas dan aman untuk menyampaikan suara. Masukanmu bisa ditempel via <i>sticky note</i> di mading fisik sekolah atau diisi lewat form digital ini.</p>
+            
+            <div class="dictionary">
+                <div class="dict-card aspirasi">
+                    <strong>Aspirasi</strong>
+                    Harapan/ide kreatif kemajuan sekolah.
+                </div>
+                <div class="dict-card kritik">
+                    <strong>Kritik</strong>
+                    Tanggapan jujur atas hal yang perlu diperbaiki.
+                </div>
+                <div class="dict-card saran">
+                    <strong>Saran</strong>
+                    Usulan solusi konkret atas masalah.
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Input Aspirasi -->
+        <form id="formAspirasi">
+            <div class="form-group">
+                <label for="nama">Nama / Kelas <span style="font-weight: normal; color: var(--text-muted);">(Opsional)</span></label>
+                <input type="text" id="nama" name="nama" placeholder="Contoh: Budi (X-1) atau biarkan kosong jika anonim">
+            </div>
+
+            <div class="form-group">
+                <label for="kategori">Kategori Suara</label>
+                <select id="kategori" name="kategori" required>
+                    <option value="" disabled selected>-- Pilih Kategori --</option>
+                    <option value="Aspirasi">Aspirasi (Ide/Harapan)</option>
+                    <option value="Kritik">Kritik (Evaluasi/Keluhan)</option>
+                    <option value="Saran">Saran (Solusi/Usulan)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="pesan">Pesan Suara Kamu</label>
+                <textarea id="pesan" name="pesan" placeholder="Tuliskan isi pikiranmu secara jelas dan sopan..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit" id="btnKirim">Kirim Aspirasi Sekarang</button>
+        </form>
+    </div>
+
+    <div class="footer">
+        Dikelola oleh <strong>Majelis Perwakilan Kelas (MPK)</strong> &bull; Privasi Terjaga
+    </div>
+</div>
+
+<script>
+    // MASUKKAN URL APPS SCRIPT KAMU DI SINI
+    const scriptURL = 'PASTE_LINK_GOOGLE_SCRIPT_DI_SINI'; 
+    const form = document.forms['formAspirasi'];
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        const btn = document.getElementById('btnKirim');
+        btn.innerText = 'Sedang Mengirim...';
+        btn.disabled = true;
+
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                alert('Aspirasi kamu berhasil terkirim ke MPK! Terima kasih sudah bersuara.');
+                form.reset();
+                btn.innerText = 'Kirim Aspirasi Sekarang';
+                btn.disabled = false;
+            })
+            .catch(error => {
+                alert('Gagal mengirim. Pastikan koneksi internet lancar ya!');
+                btn.innerText = 'Kirim Aspirasi Sekarang';
+                btn.disabled = false;
+            });
+    });
+</script>
+
+</body>
+</html>
