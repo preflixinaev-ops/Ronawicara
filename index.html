@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0b1f4b">
+<title>Ronawicara — Ruang Aspirasi MPK SMAN 1 Batujaya</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0b1f4b;--blue:#155eef;--cyan:#12a8e8;--ink:#0f172a;--muted:#64748b;
+  --bg:#f4f7fb;--card:#fff;--line:#e4eaf2;--soft:#eef5ff;--green:#0f9f6e;
+  --yellow:#b7791f;--red:#c2415b;--shadow:0 18px 50px rgba(15,23,42,.08);
+  --r:22px
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans',sans-serif}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);min-height:100vh;padding:16px 12px}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{width:100%;max-width:720px;margin:auto;background:var(--card);border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:var(--shadow)}
+.hero{position:relative;overflow:hidden;padding:28px 22px 24px;color:#fff;background:
+ radial-gradient(circle at 90% 10%,rgba(18,168,232,.38),transparent 28%),
+ linear-gradient(135deg,#071738,#0b2e72 58%,#087eae)}
+.hero:after{content:"";position:absolute;width:180px;height:180px;border:1px solid rgba(255,255,255,.1);border-radius:50%;right:-70px;bottom:-95px}
+.eyebrow{display:inline-flex;gap:7px;align-items:center;font-size:10px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#bfeeff;margin-bottom:10px}
+.hero h1{font-size:31px;line-height:1.08;letter-spacing:-.7px;margin-bottom:9px}
+.hero p{font-size:12.5px;line-height:1.65;color:#dbeafe;max-width:580px}
+.badge{display:inline-flex;margin-top:16px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);font-size:10.5px;font-weight:700}
+.nav{position:sticky;top:0;z-index:5;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:7px;background:rgba(255,255,255,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav button{border:0;background:transparent;color:var(--muted);padding:10px 4px;border-radius:12px;font-size:10.5px;font-weight:800}
+.nav button.active{background:#edf4ff;color:var(--blue)}
+main{padding:20px 17px 0}
+.section{display:none}.section.active{display:block;animation:up .25s ease}
+@keyframes up{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.profile{display:flex;gap:13px;align-items:center;padding:14px;border:1px solid var(--line);background:linear-gradient(135deg,#f8fbff,#f3f7fc);border-radius:18px;margin-bottom:17px}
+.avatar{width:58px;height:58px;border-radius:50%;object-fit:cover;border:2px solid #39aee9;background:#dbeafe;flex:none}
+.profile h3{font-size:14px}.role{font-size:10.5px;font-weight:800;color:var(--blue);margin:3px 0 4px}.profile p{font-size:10.5px;line-height:1.45;color:var(--muted)}
+.section-head{display:flex;justify-content:space-between;gap:10px;align-items:end;margin:20px 0 10px}
+.section-head h2{font-size:16px;letter-spacing:-.2px}.section-head p{font-size:10px;color:var(--muted);line-height:1.5}
+.kicker{font-size:9px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:15px}
+.intro{font-size:12px;line-height:1.7;color:#334155}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stat{padding:13px 9px;border-radius:15px;background:#f7faff;border:1px solid #e7eef8}
+.stat b{display:block;font-size:19px;letter-spacing:-.5px}.stat span{display:block;font-size:9.5px;color:var(--muted);margin-top:2px}
+.progress{height:8px;background:#e9eef5;border-radius:99px;overflow:hidden;margin-top:9px}.bar{height:100%;width:64%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:99px}
+.steps{display:grid;gap:9px}.step{display:flex;gap:10px;align-items:flex-start}.num{width:26px;height:26px;border-radius:9px;display:grid;place-items:center;background:#edf4ff;color:var(--blue);font-size:10px;font-weight:800;flex:none}.step strong{font-size:11.5px}.step p{font-size:10.5px;color:var(--muted);line-height:1.45;margin-top:2px}
+.types{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.type{padding:13px 9px;border-radius:15px;text-align:center}.type b{display:block;font-size:11px;margin-bottom:5px}.type span{font-size:9.5px;line-height:1.4;display:block}.asp{background:#fff9df;color:#875b08}.krit{background:#fff0f3;color:#9d2947}.sar{background:#ecfbf3;color:#18704e}
+.cta{margin:17px 0;padding:17px;border-radius:19px;background:linear-gradient(135deg,#0b1f4b,#125da7);color:#fff}.cta h3{font-size:14px;margin-bottom:5px}.cta p{font-size:10.5px;line-height:1.55;color:#dbeafe;margin-bottom:12px}
+.primary,.secondary{border:0;border-radius:11px;padding:11px 13px;font-size:11.5px;font-weight:800}.primary{background:#fff;color:var(--navy)}.secondary{background:#edf4ff;color:var(--blue);width:100%}
+.toolbar{display:flex;gap:7px;overflow:auto;margin-bottom:12px}.filter{white-space:nowrap;border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:8px 11px;font-size:10px;font-weight:700}.filter.active{background:#edf4ff;color:var(--blue);border-color:#cfe0ff}
+.feed{display:grid;gap:9px}.item{border:1px solid var(--line);border-radius:16px;padding:13px;background:#fff}.item-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.tag{font-size:9px;font-weight:800;padding:5px 7px;border-radius:999px;background:#edf4ff;color:var(--blue)}.date{font-size:9px;color:#94a3b8}.item h4{font-size:11.5px;margin:8px 0 4px}.item p{font-size:10px;line-height:1.55;color:var(--muted)}.status{margin-top:9px;display:flex;align-items:center;gap:6px;font-size:9.5px;font-weight:800;color:var(--green)}.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.form-card{padding:15px;border:1px solid var(--line);border-radius:18px;background:#fff}.notice{padding:11px 12px;border-radius:13px;background:#f0f7ff;color:#31547b;font-size:9.5px;line-height:1.55;margin-bottom:14px}
+.group{margin-bottom:13px}.group label{display:block;font-size:10.5px;font-weight:800;margin-bottom:6px}.group input,.group select,.group textarea{width:100%;border:1px solid var(--line);border-radius:11px;background:#f8fafc;padding:11px 12px;font-size:11.5px;outline:none}.group textarea{min-height:115px;resize:vertical}.group input:focus,.group select:focus,.group textarea:focus{border-color:#65aeea;box-shadow:0 0 0 3px #e9f4ff;background:#fff}.check{display:flex;gap:8px;align-items:flex-start;font-size:9.5px;color:var(--muted);line-height:1.4;margin:2px 0 13px}.check input{margin-top:2px}
+.faq{display:grid;gap:8px}.faq details{border:1px solid var(--line);border-radius:14px;padding:12px 13px;background:#fff}.faq summary{font-size:10.5px;font-weight:800;cursor:pointer}.faq p{font-size:10px;color:var(--muted);line-height:1.55;margin-top:8px}
+.footer{padding:18px;text-align:center;color:#94a3b8;font-size:9.5px;border-top:1px solid var(--line);margin-top:20px}
+@media(max-width:430px){.hero h1{font-size:27px}.stats,.types{grid-template-columns:1fr}.nav button{font-size:9.5px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="hero">
+    <div class="eyebrow">● MPK SMAN 1 Batujaya · 2026</div>
+    <h1>RONAWICARA</h1>
+    <p>Ruang aspirasi & suara siswa — dari suara yang masuk, menjadi bahan untuk perubahan yang nyata.</p>
+    <div class="badge">Digital Aspirasi Platform</div>
+  </header>
+
+  <nav class="nav" aria-label="Navigasi">
+    <button class="active" onclick="showSection('beranda',this)">Beranda</button>
+    <button onclick="showSection('aspirasi',this)">Aspirasi</button>
+    <button onclick="showSection('proses',this)">Proses</button>
+    <button onclick="showSection('tentang',this)">Tentang</button>
+  </nav>
+
+  <main>
+    <section id="beranda" class="section active">
+      <div class="profile">
+        <img class="avatar" src="https://ibb.co.com/qYDbBV4M" alt="Yuyun Yulianti">
+        <div>
+          <h3>Yuyun Yulianti</h3>
+          <div class="role">Calon Ketua MPK SMAN 1 Batujaya</div>
+          <p>Gagasan Ronawicara untuk membangun jembatan aspirasi yang lebih mudah, tercatat, dan transparan.</p>
+        </div>
+      </div>
+
+      <div class="section-head"><div><div class="kicker">Kenapa Ronawicara?</div><h2>Bukan cuma kotak saran.</h2></div></div>
+      <div class="card">
+        <p class="intro">Ronawicara adalah program penampungan aspirasi, kritik, dan saran digital. Tujuannya bukan hanya menerima suara siswa, tetapi membuat prosesnya lebih terstruktur: <b>diterima, dikaji, disampaikan, lalu diberi tanggapan.</b></p>
+        <div class="stats">
+          <div class="stat"><b>24/7</b><span>akses aspirasi</span></div>
+          <div class="stat"><b>3+</b><span>kategori utama</span></div>
+          <div class="stat"><b>1</b><span>ruang suara bersama</span></div>
+        </div>
+      </div>
+
+      <div class="section-head"><div><div class="kicker">Prinsip</div><h2>Suaramu punya alur.</h2></div></div>
+      <div class="card">
+        <div class="steps">
+          <div class="step"><div class="num">01</div><div><strong>Kirim</strong><p>Sampaikan aspirasi dengan identitas opsional.</p></div></div>
+          <div class="step"><div class="num">02</div><div><strong>Rekap & kaji</strong><p>MPK memilah dan mengelompokkan isu yang masuk.</p></div></div>
+          <div class="step"><div class="num">03</div><div><strong>Sampaikan</strong><p>Isu dibawa ke ruang diskusi internal dan pihak terkait.</p></div></div>
+          <div class="step"><div class="num">04</div><div><strong>Tanggapi</strong><p>Perkembangan dapat dirangkum agar siswa tahu tindak lanjutnya.</p></div></div>
+        </div>
+      </div>
+
+      <div class="section-head"><div><div class="kicker">Kenali jenisnya</div><h2>Bedakan suaramu.</h2></div></div>
+      <div class="types">
+        <div class="type asp"><b>Aspirasi</b><span>Ide atau harapan baru untuk sekolah.</span></div>
+        <div class="type krit"><b>Kritik</b><span>Hal yang dinilai perlu dievaluasi.</span></div>
+        <div class="type sar"><b>Saran</b><span>Usulan solusi untuk perbaikan.</span></div>
+      </div>
+
+      <div class="cta">
+        <h3>Punya sesuatu yang perlu didengar?</h3>
+        <p>Jangan berhenti di obrolan. Sampaikan lewat jalur yang bisa dicatat dan ditindaklanjuti.</p>
+        <button class="primary" onclick="go('aspirasi')">Sampaikan Aspirasi →</button>
+      </div>
+    </section>
+
+    <section id="aspirasi" class="section">
+      <div class="section-head"><div><div class="kicker">Ruang suara siswa</div><h2>Sampaikan aspirasimu.</h2></div></div>
+      <div class="form-card">
+        <div class="notice"><b>Privasi:</b> nama boleh dikosongkan untuk menyampaikan secara anonim. Kelas/jabatan tetap diperlukan agar konteks aspirasi dapat dipahami.</div>
+        <form id="aspirasiForm">
+          <div class="group"><label for="nama">Nama Lengkap <span style="color:#94a3b8">(opsional)</span></label><input id="nama" placeholder="Boleh dikosongkan"></div>
+          <div class="group"><label for="kelas">Kelas</label><input id="kelas" placeholder="Contoh: X.10" required></div>
+          <div class="group"><label for="kategori">Kategori Pesan</label><select id="kategori" required><option value="" disabled selected>Pilih kategori</option><option>Aspirasi</option><option>Kritik</option><option>Saran</option><option>Fasilitas & Sarpras Sekolah</option><option>Kegiatan / Ekstrakurikuler</option></select></div>
+          <div class="group"><label for="pesan">Isi Pesan / Aspirasi</label><textarea id="pesan" placeholder="Tuliskan dengan jelas dan santun..." required></textarea></div>
+          <label class="check"><input id="setuju" type="checkbox" required> Saya menyampaikan masukan dengan itikad baik dan tidak menggunakan ruang ini untuk menyerang pribadi.</label>
+          <button class="secondary" id="submitBtn" type="submit">Kirim Aspirasi</button>
+          <p id="formMsg" style="font-size:10px;margin:10px 0 0;color:#64748b"></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="proses" class="section">
+      <div class="section-head"><div><div class="kicker">Transparansi</div><h2>Aspirasi yang bergerak.</h2><p>Rekap yang tampil di sini hanya data yang sudah dipilih MPK untuk dipublikasikan.</p></div></div>
+      <div class="card" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:800"><span>Progres aspirasi yang dipublikasikan</span><span id="progressText">0%</span></div>
+        <div class="progress"><div class="bar" id="progressBar" style="width:0%"></div></div>
+      </div>
+      <div class="toolbar">
+        <button class="filter active" onclick="filterFeed('all',this)">Semua</button>
+        <button class="filter" onclick="filterFeed('fasilitas',this)">Fasilitas</button>
+        <button class="filter" onclick="filterFeed('kegiatan',this)">Kegiatan</button>
+        <button class="filter" onclick="filterFeed('saran',this)">Saran</button>
+      </div>
+      <div class="feed" id="feed"><div class="item"><p>Memuat rekap publik...</p></div></div>
+    </section>
+
+    <section id="tentang" class="section">
+      <div class="section-head"><div><div class="kicker">Tentang program</div><h2>Kenapa dibuat digital?</h2></div></div>
+      <div class="card">
+        <p class="intro">Internet bukan sekadar tempat menyebarkan informasi. Dalam Ronawicara, teknologi dipakai sebagai alat untuk membuat penyampaian aspirasi lebih mudah diakses dan proses tindak lanjut lebih mudah didokumentasikan.</p>
+        <div style="height:10px"></div>
+        <p class="intro"><b>Targetnya sederhana:</b> siswa tidak hanya merasa didengar, tetapi dapat melihat bahwa suara mereka masuk ke sebuah proses.</p>
+      </div>
+      <div class="section-head"><div><div class="kicker">FAQ</div><h2>Pertanyaan umum.</h2></div></div>
+      <div class="faq">
+        <details><summary>Apakah harus mencantumkan nama?</summary><p>Tidak. Nama dibuat opsional agar siswa tetap memiliki ruang untuk menyampaikan masukan secara anonim.</p></details>
+        <details><summary>Apakah semua aspirasi pasti diterima?</summary><p>Semua masukan dapat masuk untuk direkap, tetapi tindak lanjut bergantung pada isi, konteks, kewenangan, dan pembahasan pihak terkait.</p></details>
+        <details><summary>Siapa yang mengelola Ronawicara?</summary><p>Program ini dirancang sebagai gagasan kerja MPK SMAN 1 Batujaya. Pengelolaan dan tindak lanjut perlu mengikuti struktur kepengurusan yang nantinya ditetapkan.</p></details>
+        <details><summary>Bagaimana agar transparan?</summary><p>MPK dapat membuat rekap berkala berisi kategori, jumlah, status, dan rangkuman tindak lanjut tanpa membuka identitas pengirim.</p></details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">© 2026 MPK SMAN 1 Batujaya · Ronawicara<br>Ruang suara siswa untuk sekolah yang terus berkembang.</footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://trnivdshnpgyegghxuil.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_3rUNAf2FyrhtpEeu3voFKw_Q253R-OB";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+function showSection(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function go(id){
+  const btn=[...document.querySelectorAll('.nav button')].find(b=>b.textContent.toLowerCase().includes(id==='aspirasi'?'aspirasi':'beranda'));
+  showSection(id,btn);
+}
+function filterFeed(cat,btn){
+  document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#feed .item').forEach(item=>{
+    item.style.display=(cat==='all'||item.dataset.cat===cat)?'block':'none';
+  });
+}
+
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+}
+
+async function loadPublicFeed(){
+  const feed=document.getElementById('feed');
+  const {data,error}=await sb.rpc('get_public_aspirasi');
+  if(error){
+    console.error(error);
+    feed.innerHTML='<div class="item"><p>Rekap publik belum tersedia.</p></div>';
+    return;
+  }
+  if(!data || data.length===0){
+    feed.innerHTML='<div class="item"><p>Belum ada aspirasi yang dipublikasikan.</p></div>';
+    document.getElementById('progressText').textContent='0%';
+    document.getElementById('progressBar').style.width='0%';
+    return;
+  }
+  const done=data.filter(x=>['Selesai','Ditindaklanjuti'].includes(x.status)).length;
+  const progress=Math.round((done/data.length)*100);
+  document.getElementById('progressText').textContent=progress+'%';
+  document.getElementById('progressBar').style.width=progress+'%';
+  feed.innerHTML=data.map(x=>{
+    const cat=String(x.kategori||'').toLowerCase().includes('fasilitas')?'fasilitas':String(x.kategori||'').toLowerCase().includes('kegiatan')?'kegiatan':String(x.kategori||'').toLowerCase().includes('saran')?'saran':'lainnya';
+    const date=new Date(x.created_at).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+    return `<article class="item" data-cat="${cat}"><div class="item-top"><span class="tag">${escapeHtml(x.kategori)}</span><span class="date">${date}</span></div><h4>Rekap aspirasi siswa</h4><p>${escapeHtml(x.ringkasan_publik||'Belum ada ringkasan publik.')}</p><div class="status"><span class="dot"></span>${escapeHtml(x.status)}</div></article>`;
+  }).join('');
+}
+
+document.getElementById('aspirasiForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const btn=document.getElementById('submitBtn');
+  const msg=document.getElementById('formMsg');
+  btn.disabled=true; btn.textContent='Mengirim...'; msg.textContent='';
+  const {error}=await sb.from('aspirasi').insert({
+    nama:document.getElementById('nama').value.trim() || null,
+    kelas:document.getElementById('kelas').value.trim(),
+    kategori:document.getElementById('kategori').value,
+    pesan:document.getElementById('pesan').value.trim()
+  });
+  if(error){
+    console.error(error);
+    msg.textContent='Gagal mengirim. Coba lagi beberapa saat.';
+    msg.style.color='#b91c1c';
+  }else{
+    msg.textContent='Aspirasi berhasil dikirim dan masuk ke rekap MPK.';
+    msg.style.color='#15803d';
+    e.target.reset();
+  }
+  btn.disabled=false; btn.textContent='Kirim Aspirasi';
+});
+
+loadPublicFeed();
+</script>
+</body>
+</html>
