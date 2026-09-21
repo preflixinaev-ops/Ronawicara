@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Ronawicara — Dashboard MPK</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root{
+  --p:#1e3a8a;
+  --a:#0284c7;
+  --bg:#f8fafc;
+  --card:#fff;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --danger:#dc2626;
+}
+
+*{
+  box-sizing:border-box;
+  font-family:Arial,sans-serif
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text)
+}
+
+.wrap{
+  max-width:1050px;
+  margin:auto;
+  padding:18px
+}
+
+.top{
+  background:linear-gradient(135deg,var(--p),var(--a));
+  color:#fff;
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:16px
+}
+
+.top h1{
+  margin:0;
+  font-size:23px
+}
+
+.top p{
+  margin:6px 0 0;
+  opacity:.9;
+  font-size:13px
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:16px
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px
+}
+
+.stat{
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#fff
+}
+
+.stat b{
+  font-size:24px;
+  display:block
+}
+
+.stat span{
+  font-size:12px;
+  color:var(--muted)
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:11px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  margin-top:6px;
+  background:#fff
+}
+
+button{
+  border:0;
+  border-radius:10px;
+  padding:11px 14px;
+  font-weight:700;
+  cursor:pointer
+}
+
+.primary{
+  background:var(--p);
+  color:#fff
+}
+
+.danger{
+  background:#fee2e2;
+  color:#991b1b
+}
+
+.muted{
+  color:var(--muted);
+  font-size:12px
+}
+
+.hidden{
+  display:none!important
+}
+
+.login{
+  max-width:430px;
+  margin:9vh auto
+}
+
+.item{
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:15px;
+  margin-top:12px
+}
+
+.item-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#e0f2fe;
+  color:#075985;
+  font-size:11px;
+  font-weight:700
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px
+}
+
+textarea{
+  min-height:80px;
+  resize:vertical
+}
+
+/* Sticky note khusus untuk isi pesan aspirasi */
+.message-note{
+  position:relative;
+  margin:18px 4px;
+  padding:22px 20px 24px;
+  background:#fff7a8;
+  border:1px solid #eadf86;
+  border-radius:4px;
+  box-shadow:0 7px 14px rgba(15,23,42,.12);
+  transform:rotate(var(--note-rotate, -0.7deg));
+  color:#3f3a1f;
+  font-family:"Comic Sans MS","Segoe Print",cursive;
+  font-size:15px;
+  line-height:1.7;
+}
+
+.message-note.note-1{background:#fff3a6;border-color:#eadb75}
+.message-note.note-2{background:#ffd6e7;border-color:#efb5cc}
+.message-note.note-3{background:#cfeeff;border-color:#a9d8ef}
+.message-note.note-4{background:#d9f7c8;border-color:#b9dfa6}
+.message-note.note-5{background:#e8d7ff;border-color:#cdb4e8}
+.message-note.note-6{background:#ffd9b3;border-color:#edc092}
+
+.message-note::before{
+  content:"";
+  position:absolute;
+  top:-8px;
+  left:50%;
+  width:76px;
+  height:18px;
+  transform:translateX(-50%) rotate(-1deg);
+  background:rgba(255,255,255,.48);
+  box-shadow:0 1px 3px rgba(0,0,0,.08);
+}
+
+.message-note::after{
+  content:"";
+  position:absolute;
+  right:12px;
+  bottom:8px;
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  background:rgba(255,255,255,.16);
+  pointer-events:none;
+}
+
+.delete-note{
+  margin-top:8px;
+  font-size:11px;
+  color:#991b1b
+}
+
+@media(max-width:700px){
+  .grid{
+    grid-template-columns:repeat(2,1fr)
+  }
+
+  .row{
+    grid-template-columns:1fr
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login" class="wrap login">
+  <div class="card">
+    <h2>Dashboard MPK</h2>
+    <p class="muted">
+      Ronawicara · Area pengelolaan aspirasi
+    </p>
+
+    <label>Email</label>
+    <input
+      id="email"
+      type="email"
+      autocomplete="username"
+      placeholder="Email admin"
+    >
+
+    <label>Password</label>
+    <input
+      id="password"
+      type="password"
+      autocomplete="current-password"
+      placeholder="Password"
+    >
+
+    <button
+      class="primary"
+      style="width:100%;margin-top:14px"
+      onclick="login()"
+    >
+      Masuk
+    </button>
+
+    <p id="loginMsg" class="muted"></p>
+  </div>
+</div>
+
+
+<!-- DASHBOARD -->
+<div id="app" class="wrap hidden">
+
+  <div class="top">
+    <h1>RONAWICARA — DASHBOARD MPK</h1>
+    <p>
+      Kelola aspirasi yang masuk tanpa membuka SQL Editor.
+    </p>
+  </div>
+
+
+  <!-- ACTION BAR -->
+  <div
+    class="actions"
+    style="margin-bottom:16px"
+  >
+    <button
+      class="primary"
+      onclick="loadData()"
+    >
+      ↻ Refresh data
+    </button>
+
+    <button
+      class="danger"
+      onclick="logout()"
+    >
+      Keluar
+    </button>
+  </div>
+
+
+  <!-- STATISTIK -->
+  <div class="grid">
+
+    <div class="stat">
+      <b id="sTotal">0</b>
+      <span>Total</span>
+    </div>
+
+    <div class="stat">
+      <b id="sTerima">0</b>
+      <span>Diterima</span>
+    </div>
+
+    <div class="stat">
+      <b id="sKaji">0</b>
+      <span>Dikaji</span>
+    </div>
+
+    <div class="stat">
+      <b id="sProses">0</b>
+      <span>Diproses</span>
+    </div>
+
+  </div>
+
+
+  <!-- FILTER + DATA -->
+  <div
+    class="card"
+    style="margin-top:16px"
+  >
+
+    <div class="row">
+
+      <div>
+        <label>Filter status</label>
+
+        <select
+          id="filter"
+          onchange="render()"
+        >
+          <option value="">Semua</option>
+          <option>Diterima</option>
+          <option>Dikaji</option>
+          <option>Diproses</option>
+          <option>Selesai</option>
+        </select>
+      </div>
+
+
+      <div>
+        <label>Filter kategori</label>
+
+        <select
+          id="filterCat"
+          onchange="render()"
+        >
+          <option value="">Semua</option>
+          <option>Aspirasi</option>
+          <option>Kritik</option>
+          <option>Saran</option>
+          <option>Fasilitas</option>
+          <option>Kegiatan</option>
+        </select>
+      </div>
+
+    </div>
+
+
+    <div id="list">
+      <p class="muted">
+        Memuat...
+      </p>
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+  "https://trnivdshnpgyegghxuil.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_3rUNAf2FyrhtpEeu3voFKw_Q253R-OB";
+
+const sb =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+let rows = [];
+
+
+/* =========================================
+   CEK ADMIN
+========================================= */
+
+async function isAdmin(userId){
+
+  const {
+    data,
+    error
+  } = await sb
+    .from('admin_users')
+    .select('user_id')
+    .eq('user_id',userId)
+    .maybeSingle();
+
+  return !error && !!data;
+}
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+async function login(){
+
+  const email =
+    document
+      .getElementById('email')
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById('password')
+      .value;
+
+  const msg =
+    document.getElementById('loginMsg');
+
+  msg.textContent =
+    'Memeriksa...';
+
+
+  const {
+    data,
+    error
+  } =
+    await sb.auth.signInWithPassword({
+      email,
+      password
+    });
+
+
+  if(error){
+
+    msg.textContent =
+      error.message;
+
+    return;
+  }
+
+
+  if(
+    !(await isAdmin(data.user.id))
+  ){
+
+    await sb.auth.signOut();
+
+    msg.textContent =
+      'Akun ini bukan akun admin MPK.';
+
+    return;
+  }
+
+
+  document
+    .getElementById('login')
+    .classList
+    .add('hidden');
+
+  document
+    .getElementById('app')
+    .classList
+    .remove('hidden');
+
+
+  await loadData();
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+async function logout(){
+
+  await sb.auth.signOut();
+
+  location.reload();
+}
+
+
+/* =========================================
+   LOAD DATA
+========================================= */
+
+async function loadData(){
+
+  const {
+    data,
+    error
+  } =
+    await sb
+      .from('aspirasi')
+      .select('*')
+      .order(
+        'created_at',
+        {ascending:false}
+      );
+
+
+  if(error){
+
+    document
+      .getElementById('list')
+      .innerHTML =
+      '<p class="muted">' +
+      'Gagal memuat: ' +
+      esc(error.message) +
+      '</p>';
+
+    return;
+  }
+
+
+  rows = data || [];
+
+  updateStats();
+
+  render();
+}
+
+
+/* =========================================
+   STATISTIK
+========================================= */
+
+function updateStats(){
+
+  const c =
+    s =>
+      rows.filter(
+        x => x.status === s
+      ).length;
+
+
+  document
+    .getElementById('sTotal')
+    .textContent =
+    rows.length;
+
+
+  document
+    .getElementById('sTerima')
+    .textContent =
+    c('Diterima');
+
+
+  document
+    .getElementById('sKaji')
+    .textContent =
+    c('Dikaji');
+
+
+  document
+    .getElementById('sProses')
+    .textContent =
+    c('Diproses');
+}
+
+
+/* =========================================
+   RENDER ASPIRASI
+========================================= */
+
+function render(){
+
+  const fs =
+    document
+      .getElementById('filter')
+      .value;
+
+  const fc =
+    document
+      .getElementById('filterCat')
+      .value;
+
+
+  const data =
+    rows.filter(
+      x =>
+        (!fs || x.status === fs) &&
+        (!fc || x.kategori === fc)
+    );
+
+
+  const list =
+    document.getElementById('list');
+
+
+  if(!data.length){
+
+    list.innerHTML =
+      '<p class="muted">' +
+      'Belum ada aspirasi yang cocok dengan filter.' +
+      '</p>';
+
+    return;
+  }
+
+
+  list.innerHTML =
+    data.map(x => `
+
+      <div class="item">
+
+        <div class="item-head">
+
+          <div>
+
+            <b>#${x.id}</b>
+
+            <span class="badge">
+              ${esc(x.kategori)}
+            </span>
+
+          </div>
+
+          <span class="muted">
+            ${new Date(x.created_at).toLocaleString('id-ID')}
+          </span>
+
+        </div>
+
+
+        <p>
+          <b>Nama:</b>
+          ${esc(x.nama || 'Anonim')}
+
+          <br>
+
+          <b>Kelas:</b>
+          ${esc(x.kelas)}
+        </p>
+
+
+        <div class="message-note note-${((Number(x.id) || 0) % 6) + 1}"
+             style="--note-rotate:${(((Number(x.id) || 0) % 5) - 2) * 0.45}deg">
+          ${esc(x.pesan)}
+        </div>
+
+
+        <div class="row">
+
+          <div>
+
+            <label>Status</label>
+
+            <select id="st-${x.id}">
+
+              ${
+                [
+                  'Diterima',
+                  'Dikaji',
+                  'Diproses',
+                  'Selesai'
+                ]
+                .map(
+                  s =>
+                    `<option ${
+                      x.status === s
+                        ? 'selected'
+                        : ''
+                    }>${s}</option>`
+                )
+                .join('')
+              }
+
+            </select>
+
+          </div>
+
+
+          <div>
+
+            <label>
+              Ringkasan publik
+            </label>
+
+            <textarea
+              id="rp-${x.id}"
+              placeholder="Teks aman untuk ditampilkan ke publik"
+            >${esc(x.ringkasan_publik || '')}</textarea>
+
+          </div>
+
+        </div>
+
+
+        <label style="margin-top:8px">
+
+          <input
+            id="pub-${x.id}"
+            type="checkbox"
+            style="width:auto;margin-right:7px"
+            ${x.publik ? 'checked' : ''}
+          >
+
+          Tampilkan di rekap publik
+
+        </label>
+
+
+        <div class="actions">
+
+          <button
+            class="primary"
+            onclick="saveRow(${x.id})"
+          >
+            Simpan perubahan
+          </button>
+
+
+          <button
+            class="danger"
+            onclick="deleteRow(${x.id})"
+          >
+            Hapus
+          </button>
+
+        </div>
+
+
+        <div class="delete-note">
+          Menghapus aspirasi akan menghapus data tersebut dari database.
+        </div>
+
+      </div>
+
+    `).join('');
+}
+
+
+/* =========================================
+   SIMPAN PERUBAHAN
+========================================= */
+
+async function saveRow(id){
+
+  const status =
+    document
+      .getElementById('st-' + id)
+      .value;
+
+
+  const publik =
+    document
+      .getElementById('pub-' + id)
+      .checked;
+
+
+  const ringkasan_publik =
+    document
+      .getElementById('rp-' + id)
+      .value
+      .trim();
+
+
+  const {
+    error
+  } =
+    await sb
+      .from('aspirasi')
+      .update({
+        status,
+        publik,
+        ringkasan_publik
+      })
+      .eq('id',id);
+
+
+  if(error){
+
+    alert(
+      'Gagal menyimpan: ' +
+      error.message
+    );
+
+    return;
+  }
+
+
+  alert(
+    'Perubahan tersimpan.'
+  );
+
+
+  await loadData();
+}
+
+
+/* =========================================
+   HAPUS ASPIRASI
+========================================= */
+
+async function deleteRow(id){
+
+  const row =
+    rows.find(
+      x => x.id === id
+    );
+
+
+  if(!row) return;
+
+
+  const nama =
+    row.nama ||
+    'Anonim';
+
+
+  const yakin =
+    confirm(
+      'Hapus aspirasi #' +
+      id +
+      '?\n\n' +
+      'Pengirim: ' +
+      nama +
+      '\n' +
+      'Kelas: ' +
+      row.kelas +
+      '\n\n' +
+      'Data yang dihapus tidak bisa dikembalikan.'
+    );
+
+
+  if(!yakin) return;
+
+
+  const {
+    error
+  } =
+    await sb
+      .from('aspirasi')
+      .delete()
+      .eq('id',id);
+
+
+  if(error){
+
+    alert(
+      'Gagal menghapus: ' +
+      error.message
+    );
+
+    return;
+  }
+
+
+  alert(
+    'Aspirasi #' +
+    id +
+    ' berhasil dihapus.'
+  );
+
+
+  await loadData();
+}
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function esc(v){
+
+  return String(v ?? '')
+    .replace(
+      /[&<>"']/g,
+      m =>
+        ({
+          '&':'&amp;',
+          '<':'&lt;',
+          '>':'&gt;',
+          '"':'&quot;',
+          "'":'&#039;'
+        }[m])
+    );
+}
+
+
+/* =========================================
+   CEK SESSION OTOMATIS
+========================================= */
+
+let authReady = false;
+let restoringSession = false;
+
+async function showDashboard(){
+  document
+    .getElementById('login')
+    .classList
+    .add('hidden');
+
+  document
+    .getElementById('app')
+    .classList
+    .remove('hidden');
+
+  await loadData();
+}
+
+async function restoreSession(){
+
+  if(restoringSession) return;
+  restoringSession = true;
+
+  try{
+    const {
+      data: { session },
+      error
+    } = await sb.auth.getSession();
+
+    if(error){
+      console.error('Gagal memulihkan session:', error);
+      return;
+    }
+
+    if(!session) return;
+
+    if(await isAdmin(session.user.id)){
+      await showDashboard();
+    }else{
+      await sb.auth.signOut();
+    }
+
+  }finally{
+    authReady = true;
+    restoringSession = false;
+  }
+}
+
+/*
+  Saat Chrome melakukan refresh, Supabase membutuhkan sedikit waktu
+  untuk mengambil session dari localStorage. Kita tunggu proses itu
+  selesai dan jangan pernah menampilkan login hanya karena event
+  INITIAL_SESSION / loading sementara.
+*/
+sb.auth.onAuthStateChange((event, session) => {
+
+  if(event === 'SIGNED_IN' && session){
+    setTimeout(() => {
+      if(!restoringSession) showDashboard();
+    }, 0);
+    return;
+  }
+
+  if(event === 'TOKEN_REFRESHED' && session){
+    return;
+  }
+
+  if(event === 'SIGNED_OUT' && authReady){
+    document
+      .getElementById('app')
+      .classList
+      .add('hidden');
+
+    document
+      .getElementById('login')
+      .classList
+      .remove('hidden');
+  }
+});
+
+/* Pulihkan session yang tersimpan ketika Chrome di-refresh */
+restoreSession();
+
+</script>
+
+</body>
+</html>
