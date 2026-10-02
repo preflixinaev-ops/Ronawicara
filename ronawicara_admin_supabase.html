@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Ronawicara — Dashboard MPK</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root{--p:#2563eb;--p2:#7c3aed;--bg:#f5f7fb;--card:#fff;--text:#111827;--muted:#64748b;--border:#e5e7eb;--danger:#dc2626;--green:#059669}*{box-sizing:border-box;font-family:Inter,Arial,sans-serif}body{margin:0;background:radial-gradient(circle at top left,#eaf2ff 0,transparent 32%),var(--bg);color:var(--text)}body.auth-checking #login,body.auth-checking #app{display:none!important}#authLoading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--muted);z-index:9999}.wrap{max-width:1180px;margin:auto;padding:24px}.top{position:relative;overflow:hidden;background:linear-gradient(135deg,#172554,#2563eb 55%,#7c3aed);color:#fff;border-radius:24px;padding:28px;margin-bottom:18px;box-shadow:0 18px 45px rgba(37,99,235,.18)}.top:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-50px;top:-80px;background:rgba(255,255,255,.12)}.top h1{margin:0;font-size:28px;letter-spacing:-.5px}.top p{margin:7px 0 0;opacity:.82;font-size:13px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px}.card{background:rgba(255,255,255,.94);border:1px solid var(--border);border-radius:20px;padding:18px;margin-bottom:16px;box-shadow:0 8px 25px rgba(15,23,42,.045)}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{padding:18px;border:1px solid var(--border);border-radius:17px;background:#fff}.stat b{font-size:30px;display:block;letter-spacing:-1px}.stat span{font-size:12px;color:var(--muted)}.toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px}.filters{display:flex;gap:9px;flex:1}.filters select{max-width:220px}input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:11px;margin-top:6px;background:#fff;color:var(--text);outline:none}input:focus,select:focus,textarea:focus{border-color:#93c5fd;box-shadow:0 0 0 3px rgba(59,130,246,.1)}button{border:0;border-radius:11px;padding:11px 14px;font-weight:750;cursor:pointer}.primary{background:#2563eb;color:#fff}.secondary{background:#eef2ff;color:#3730a3}.danger{background:#fee2e2;color:#991b1b}.muted{color:var(--muted);font-size:12px}.hidden{display:none!important}.login{max-width:430px;margin:9vh auto}.list-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.item{background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px;min-width:0;box-shadow:0 7px 22px rgba(15,23,42,.05);transition:.18s}.item:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(15,23,42,.09)}.item-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.item-id{font-size:12px;font-weight:800}.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:10px;font-weight:800;margin-left:5px}.status-pill{display:inline-flex;padding:5px 9px;border-radius:999px;background:#ecfdf5;color:#047857;font-size:10px;font-weight:800}.preview{margin:14px 0;padding:15px;border-radius:13px;background:#f8fafc;color:#334155;font-size:13px;line-height:1.55;min-height:92px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}.meta{display:flex;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--muted)}.actions{display:flex;gap:8px;margin-top:14px}.actions button{flex:1}.modal{position:fixed;inset:0;background:rgba(15,23,42,.58);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:18px;z-index:5000}.modal.open{display:flex}.modal-box{width:min(720px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:22px;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.25)}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.close{background:#f1f5f9;color:#475569;border-radius:50%;width:38px;height:38px;padding:0}.message-note{position:relative;margin:18px 4px;padding:22px 20px 24px;background:#fff7a8;border:1px solid #eadf86;border-radius:4px;box-shadow:0 7px 14px rgba(15,23,42,.12);transform:rotate(var(--note-rotate,-.7deg));color:#3f3a1f;font-family:"Comic Sans MS","Segoe Print",cursive;font-size:15px;line-height:1.7;white-space:pre-wrap}.message-note:before{content:"";position:absolute;top:-8px;left:50%;width:76px;height:18px;transform:translateX(-50%) rotate(-1deg);background:rgba(255,255,255,.48)}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.empty{text-align:center;padding:42px 18px;color:var(--muted)}.login button{width:100%;margin-top:12px}.login h2{margin:0 0 4px}.loginMsg{margin-top:10px}.danger-note{margin-top:9px;font-size:10px;color:#991b1b}.modal-actions{display:flex;gap:9px;margin-top:16px}.modal-actions button{flex:1}@media(max-width:900px){.list-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.wrap{padding:14px}.top{padding:22px}.top h1{font-size:23px}.toolbar,.filters{flex-direction:column;align-items:stretch}.filters select{max-width:none}.list-grid{grid-template-columns:1fr}.row{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:14px}.stat b{font-size:25px}}</style>
+</head>
+
+<body class="auth-checking">
+
+<div id="authLoading">Memulihkan sesi admin...</div>
+
+<!-- LOGIN -->
+<div id="login" class="wrap login">
+  <div class="card">
+    <h2>Dashboard MPK</h2>
+    <p class="muted">
+      Ronawicara · Area pengelolaan aspirasi
+    </p>
+
+    <label>Email</label>
+    <input
+      id="email"
+      type="email"
+      autocomplete="username"
+      placeholder="Email admin"
+    >
+
+    <label>Password</label>
+    <input
+      id="password"
+      type="password"
+      autocomplete="current-password"
+      placeholder="Password"
+    >
+
+    <button
+      class="primary"
+      style="width:100%;margin-top:14px"
+      onclick="login()"
+    >
+      Masuk
+    </button>
+
+    <p id="loginMsg" class="muted"></p>
+  </div>
+</div>
+
+
+<!-- DASHBOARD -->
+<div id="app" class="wrap hidden">
+
+  <div class="top">
+    <h1>RONAWICARA — DASHBOARD MPK</h1>
+    <p>
+      Kelola aspirasi yang masuk tanpa membuka SQL Editor.
+    </p>
+  </div>
+
+
+  <!-- ACTION BAR -->
+  <div
+    class="actions"
+    style="margin-bottom:16px"
+  >
+    <button
+      class="primary"
+      onclick="loadData()"
+    >
+      ↻ Refresh data
+    </button>
+
+    <button
+      class="danger"
+      onclick="logout()"
+    >
+      Keluar
+    </button>
+  </div>
+
+
+  <!-- STATISTIK -->
+  <div class="grid">
+
+    <div class="stat">
+      <b id="sTotal">0</b>
+      <span>Total</span>
+    </div>
+
+    <div class="stat">
+      <b id="sTerima">0</b>
+      <span>Diterima</span>
+    </div>
+
+    <div class="stat">
+      <b id="sKaji">0</b>
+      <span>Dikaji</span>
+    </div>
+
+    <div class="stat">
+      <b id="sProses">0</b>
+      <span>Diproses</span>
+    </div>
+
+  </div>
+
+
+  <!-- FILTER + DATA -->
+  <div
+    class="card"
+    style="margin-top:16px"
+  >
+
+    <div class="row">
+
+      <div>
+        <label>Filter status</label>
+
+        <select
+          id="filter"
+          onchange="render()"
+        >
+          <option value="">Semua</option>
+          <option>Diterima</option>
+          <option>Dikaji</option>
+          <option>Diproses</option>
+          <option>Selesai</option>
+        </select>
+      </div>
+
+
+      <div>
+        <label>Filter kategori</label>
+
+        <select
+          id="filterCat"
+          onchange="render()"
+        >
+          <option value="">Semua</option>
+          <option>Aspirasi</option>
+          <option>Kritik</option>
+          <option>Saran</option>
+          <option>Fasilitas</option>
+          <option>Kegiatan</option>
+        </select>
+      </div>
+
+    </div>
+
+
+    <div id="list">
+      <p class="muted">
+        Memuat...
+      </p>
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+  "https://trnivdshnpgyegghxuil.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_3rUNAf2FyrhtpEeu3voFKw_Q253R-OB";
+
+const sb =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+let rows = [];
+
+
+/* =========================================
+   CEK ADMIN
+========================================= */
+
+async function isAdmin(userId){
+
+  const {
+    data,
+    error
+  } = await sb
+    .from('admin_users')
+    .select('user_id')
+    .eq('user_id',userId)
+    .maybeSingle();
+
+  return !error && !!data;
+}
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+async function login(){
+
+  const email =
+    document
+      .getElementById('email')
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById('password')
+      .value;
+
+  const msg =
+    document.getElementById('loginMsg');
+
+  msg.textContent =
+    'Memeriksa...';
+
+
+  const {
+    data,
+    error
+  } =
+    await sb.auth.signInWithPassword({
+      email,
+      password
+    });
+
+
+  if(error){
+
+    msg.textContent =
+      error.message;
+
+    return;
+  }
+
+
+  if(
+    !(await isAdmin(data.user.id))
+  ){
+
+    await sb.auth.signOut();
+
+    msg.textContent =
+      'Akun ini bukan akun admin MPK.';
+
+    return;
+  }
+
+
+  document
+    .getElementById('login')
+    .classList
+    .add('hidden');
+
+  document
+    .getElementById('app')
+    .classList
+    .remove('hidden');
+
+
+  await loadData();
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+async function logout(){
+
+  await sb.auth.signOut();
+
+  location.reload();
+}
+
+
+/* =========================================
+   LOAD DATA
+========================================= */
+
+async function loadData(){
+
+  const {
+    data,
+    error
+  } =
+    await sb
+      .from('aspirasi')
+      .select('*')
+      .order(
+        'created_at',
+        {ascending:false}
+      );
+
+
+  if(error){
+
+    document
+      .getElementById('list')
+      .innerHTML =
+      '<p class="muted">' +
+      'Gagal memuat: ' +
+      esc(error.message) +
+      '</p>';
+
+    return;
+  }
+
+
+  rows = data || [];
+
+  updateStats();
+
+  render();
+}
+
+
+/* =========================================
+   STATISTIK
+========================================= */
+
+function updateStats(){
+
+  const c =
+    s =>
+      rows.filter(
+        x => x.status === s
+      ).length;
+
+
+  document
+    .getElementById('sTotal')
+    .textContent =
+    rows.length;
+
+
+  document
+    .getElementById('sTerima')
+    .textContent =
+    c('Diterima');
+
+
+  document
+    .getElementById('sKaji')
+    .textContent =
+    c('Dikaji');
+
+
+  document
+    .getElementById('sProses')
+    .textContent =
+    c('Diproses');
+}
+
+
+/* =========================================
+   RENDER ASPIRASI
+========================================= */
+
+function render(){
+
+  const fs =
+    document
+      .getElementById('filter')
+      .value;
+
+  const fc =
+    document
+      .getElementById('filterCat')
+      .value;
+
+
+  const data =
+    rows.filter(
+      x =>
+        (!fs || x.status === fs) &&
+        (!fc || x.kategori === fc)
+    );
+
+
+  const list =
+    document.getElementById('list');
+
+
+  if(!data.length){
+
+    list.className='list-grid';
+    list.innerHTML='<div class="card empty" style="grid-column:1/-1"><b>Belum ada aspirasi</b><br>Belum ada data yang cocok dengan filter saat ini.</div>';
+
+    return;
+  }
+
+
+  list.className='list-grid';
+  list.innerHTML = data.map(x => `
+    <article class="item">
+      <div class="item-head"><div><span class="item-id">#${x.id}</span><span class="badge">${esc(x.kategori)}</span></div><span class="status-pill">${esc(x.status||'Diterima')}</span></div>
+      <div class="meta" style="margin-top:9px"><span>${esc(x.nama||'Anonim')}</span><span>•</span><span>${esc(x.kelas)}</span><span>•</span><span>${new Date(x.created_at).toLocaleDateString('id-ID')}</span></div>
+      <div class="preview">${esc(x.pesan)}</div>
+      <div class="actions"><button class="secondary" onclick="openModal(${x.id})">Lihat & Kelola</button><button class="danger" onclick="deleteRow(${x.id})">Hapus</button></div>
+    </article>`).join('');
+
+}
+
+
+function openModal(id){
+  const x=rows.find(r=>r.id===id); if(!x)return;
+  const colors={'#fff3a6':'#eadb75','#ffd6e7':'#efb5cc','#cfeeff':'#a9d8ef','#d9f7c8':'#b9dfa6','#e8d7ff':'#cdb4e8','#ffd9b3':'#edc092'};
+  document.getElementById('modalContent').innerHTML=`
+    <div class="modal-head"><div><div class="item-id">ASPIRASI #${x.id}</div><h2 style="margin:5px 0">${esc(x.kategori)}</h2><div class="meta">${esc(x.nama||'Anonim')} · ${esc(x.kelas)} · ${new Date(x.created_at).toLocaleString('id-ID')}</div></div><button class="close" onclick="closeModal()">×</button></div>
+    <div class="message-note" style="background:${esc(x.warna_sticky||'#fff3a6')};border-color:${esc(colors[x.warna_sticky]||'#eadb75')};--note-rotate:0deg">${esc(x.pesan)}</div>
+    <div class="row"><div><label>Status</label><select id="st-${x.id}">${['Diterima','Dikaji','Diproses','Selesai'].map(v=>`<option ${x.status===v?'selected':''}>${v}</option>`).join('')}</select></div><div><label>Ringkasan publik</label><textarea id="rp-${x.id}" rows="5" placeholder="Teks aman untuk ditampilkan ke publik">${esc(x.ringkasan_publik||'')}</textarea></div></div>
+    <label style="display:block;margin-top:12px"><input id="pub-${x.id}" type="checkbox" style="width:auto;margin-right:7px" ${x.publik?'checked':''}> Tampilkan di rekap publik</label>
+    <div class="modal-actions"><button class="primary" onclick="saveRow(${x.id})">Simpan perubahan</button><button class="secondary" onclick="closeModal()">Tutup</button></div>`;
+  document.getElementById('detailModal').classList.add('open');
+}
+function closeModal(e){if(e && e.target!==e.currentTarget)return;document.getElementById('detailModal').classList.remove('open')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+/* =========================================
+   SIMPAN PERUBAHAN
+========================================= */
+
+async function saveRow(id){
+
+  const status =
+    document
+      .getElementById('st-' + id)
+      .value;
+
+
+  const publik =
+    document
+      .getElementById('pub-' + id)
+      .checked;
+
+
+  const ringkasan_publik =
+    document
+      .getElementById('rp-' + id)
+      .value
+      .trim();
+
+
+  const {
+    error
+  } =
+    await sb
+      .from('aspirasi')
+      .update({
+        status,
+        publik,
+        ringkasan_publik
+      })
+      .eq('id',id);
+
+
+  if(error){
+
+    alert(
+      'Gagal menyimpan: ' +
+      error.message
+    );
+
+    return;
+  }
+
+
+  alert(
+    'Perubahan tersimpan.'
+  );
+
+
+  closeModal();
+  await loadData();
+}
+
+
+/* =========================================
+   HAPUS ASPIRASI
+========================================= */
+
+async function deleteRow(id){
+
+  const row =
+    rows.find(
+      x => x.id === id
+    );
+
+
+  if(!row) return;
+
+
+  const nama =
+    row.nama ||
+    'Anonim';
+
+
+  const yakin =
+    confirm(
+      'Hapus aspirasi #' +
+      id +
+      '?\n\n' +
+      'Pengirim: ' +
+      nama +
+      '\n' +
+      'Kelas: ' +
+      row.kelas +
+      '\n\n' +
+      'Data yang dihapus tidak bisa dikembalikan.'
+    );
+
+
+  if(!yakin) return;
+
+
+  const {
+    error
+  } =
+    await sb
+      .from('aspirasi')
+      .delete()
+      .eq('id',id);
+
+
+  if(error){
+
+    alert(
+      'Gagal menghapus: ' +
+      error.message
+    );
+
+    return;
+  }
+
+
+  alert(
+    'Aspirasi #' +
+    id +
+    ' berhasil dihapus.'
+  );
+
+
+  await loadData();
+}
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function esc(v){
+
+  return String(v ?? '')
+    .replace(
+      /[&<>"']/g,
+      m =>
+        ({
+          '&':'&amp;',
+          '<':'&lt;',
+          '>':'&gt;',
+          '"':'&quot;',
+          "'":'&#039;'
+        }[m])
+    );
+}
+
+
+/* =========================================
+   CEK SESSION OTOMATIS
+========================================= */
+
+let authReady = false;
+let restoringSession = false;
+
+async function showDashboard(){
+  document
+    .getElementById('login')
+    .classList
+    .add('hidden');
+
+  document
+    .getElementById('app')
+    .classList
+    .remove('hidden');
+
+  document.body.classList.remove('auth-checking');
+
+  await loadData();
+}
+
+async function restoreSession(){
+
+  if(restoringSession) return;
+  restoringSession = true;
+
+  try{
+    const {
+      data: { session },
+      error
+    } = await sb.auth.getSession();
+
+    if(error){
+      console.error('Gagal memulihkan session:', error);
+      document.body.classList.remove('auth-checking');
+      return;
+    }
+
+    if(!session){
+      document
+        .getElementById('app')
+        .classList
+        .add('hidden');
+
+      document
+        .getElementById('login')
+        .classList
+        .remove('hidden');
+
+      document.body.classList.remove('auth-checking');
+      return;
+    }
+
+    if(await isAdmin(session.user.id)){
+      await showDashboard();
+    }else{
+      await sb.auth.signOut();
+
+      document
+        .getElementById('app')
+        .classList
+        .add('hidden');
+
+      document
+        .getElementById('login')
+        .classList
+        .remove('hidden');
+    }
+
+    document.body.classList.remove('auth-checking');
+
+  }finally{
+    authReady = true;
+    restoringSession = false;
+  }
+}
+
+/*
+  Saat Chrome melakukan refresh, Supabase membutuhkan sedikit waktu
+  untuk mengambil session dari localStorage. Kita tunggu proses itu
+  selesai dan jangan pernah menampilkan login hanya karena event
+  INITIAL_SESSION / loading sementara.
+*/
+sb.auth.onAuthStateChange((event, session) => {
+
+  if(event === 'SIGNED_IN' && session){
+    setTimeout(() => {
+      if(!restoringSession) showDashboard();
+    }, 0);
+    return;
+  }
+
+  if(event === 'TOKEN_REFRESHED' && session){
+    return;
+  }
+
+  if(event === 'SIGNED_OUT' && authReady){
+    document
+      .getElementById('app')
+      .classList
+      .add('hidden');
+
+    document
+      .getElementById('login')
+      .classList
+      .remove('hidden');
+  }
+});
+
+/* Pulihkan session yang tersimpan ketika Chrome di-refresh */
+restoreSession();
+
+</script>
+
+</body>
+</html>
